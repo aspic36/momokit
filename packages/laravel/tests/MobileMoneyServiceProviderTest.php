@@ -7,6 +7,7 @@ namespace MomoKit\Laravel\Tests;
 use MomoKit\Core\DTO\CollectRequest;
 use MomoKit\Core\Enums\PaymentStatus;
 use MomoKit\Core\Exceptions\PaymentTimeoutException;
+use MomoKit\Core\Exceptions\UnknownDriverException;
 use MomoKit\Laravel\Facades\MobileMoney;
 use MomoKit\Laravel\MobileMoneyServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
@@ -69,5 +70,24 @@ final class MobileMoneyServiceProviderTest extends OrchestraTestCase
         config()->set('mobile-money.default', 'mock');
 
         $this->assertSame('mock', MobileMoney::driver()->name());
+    }
+
+    public function test_the_fedapay_driver_is_registered_when_a_secret_key_is_configured(): void
+    {
+        config()->set('mobile-money.drivers.fedapay', [
+            'driver' => 'fedapay',
+            'secret_key' => 'sk_sandbox_test',
+            'webhook_secret' => 'wh_sandbox_test',
+            'environment' => 'sandbox',
+        ]);
+
+        $this->assertSame('fedapay', MobileMoney::driver('fedapay')->name());
+    }
+
+    public function test_the_fedapay_driver_is_skipped_without_a_secret_key(): void
+    {
+        $this->expectException(UnknownDriverException::class);
+
+        MobileMoney::driver('fedapay');
     }
 }

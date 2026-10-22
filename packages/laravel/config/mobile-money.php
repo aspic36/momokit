@@ -19,8 +19,8 @@ return [
     | Drivers
     |--------------------------------------------------------------------------
     |
-    | Real aggregators are added here as they become available. The mock
-    | driver is always available.
+    | Real aggregators are registered only when their credentials are set,
+    | so a fresh install always works with the mock driver.
     |
     */
 
@@ -30,11 +30,13 @@ return [
             'driver' => 'mock',
         ],
 
-        // 'fedapay' => [
-        //     'driver' => 'fedapay',
-        //     'secret' => env('FEDAPAY_SECRET_KEY'),
-        //     'environment' => env('FEDAPAY_ENVIRONMENT', 'sandbox'),
-        // ],
+        'fedapay' => [
+            'driver' => 'fedapay',
+            'secret_key' => env('FEDAPAY_SECRET_KEY'),
+            'webhook_secret' => env('FEDAPAY_WEBHOOK_SECRET'),
+            'environment' => env('FEDAPAY_ENVIRONMENT', 'sandbox'),
+            'callback_url' => env('FEDAPAY_CALLBACK_URL'),
+        ],
 
     ],
 
