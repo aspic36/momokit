@@ -10,3 +10,4 @@ coverage/
 *.log
 *.swp
 *.swo
+sandbox/storage/

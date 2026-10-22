@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: momokit-sandbox
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./sandbox/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: DB_PATH
+        value: /tmp/momokit-sandbox.sqlite
+      - key: SANDBOX_ALLOW_PRIVATE_WEBHOOKS
+        value: "0"

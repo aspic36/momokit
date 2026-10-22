@@ -41,3 +41,11 @@ jobs:
       - name: Laravel bridge — tests
         working-directory: packages/laravel
         run: vendor/bin/phpunit
+
+      - name: Sandbox — install
+        working-directory: sandbox
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Sandbox — tests
+        working-directory: sandbox
+        run: vendor/bin/phpunit

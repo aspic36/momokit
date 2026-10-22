@@ -1,0 +1,7 @@
+.git
+**/vendor
+**/node_modules
+sandbox/storage
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal

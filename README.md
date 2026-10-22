@@ -147,7 +147,7 @@ php artisan mobile-money:simulate fedapay --amount=5000 --status=succeeded
 ```
 packages/core     SDK PHP pur (aucune dépendance framework)
 packages/laravel  Bridge Laravel (façade, config, commande, fake)
-sandbox           Sandbox public gratuit (à venir — phase 3)
+sandbox           Sandbox public (API + page de paiement, Docker/Render)
 docs              Documentation FR/EN
 ```
 
@@ -156,7 +156,7 @@ docs              Documentation FR/EN
 1. `core` + driver `mock` + tests — **fait**
 2. Driver FedaPay + webhooks signés — **fait** (à valider contre la vraie API sandbox)
 3. `MobileMoney::fake()` + commande `mobile-money:simulate` — **fait**
-4. v0.1 sur Packagist + sandbox public en ligne
+4. v0.1 sur Packagist + sandbox public en ligne — **en cours**
 5. KkiaPay, PayDunya, CinetPay
 
 ## Licence

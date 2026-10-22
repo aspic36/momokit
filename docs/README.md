@@ -1,5 +1,6 @@
 # Documentation
 
+- [sandbox.md](sandbox.md) — référence de l'API du sandbox public
 - `fr/` — documentation en français (à venir)
 - `en/` — English documentation (coming)
 
