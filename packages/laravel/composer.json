@@ -1,0 +1,53 @@
+{
+    "name": "momokit/laravel",
+    "description": "Laravel bridge for MomoKit — unified West African mobile money payments with a built-in test mode.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["laravel", "mobile-money", "africa", "payment", "fedapay", "kkiapay", "paydunya", "cinetpay"],
+    "require": {
+        "php": "^8.3",
+        "illuminate/support": "^11.0|^12.0|^13.0",
+        "momokit/core": "^0.1"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0|^10.0|^11.0|^12.0",
+        "phpunit/phpunit": "^11.0|^12.0"
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../core",
+            "options": {
+                "symlink": true,
+                "versions": {
+                    "momokit/core": "0.1.0"
+                }
+            }
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "MomoKit\\Laravel\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MomoKit\\Laravel\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "MomoKit\\Laravel\\MobileMoneyServiceProvider"
+            ],
+            "aliases": {
+                "MobileMoney": "MomoKit\\Laravel\\Facades\\MobileMoney"
+            }
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
