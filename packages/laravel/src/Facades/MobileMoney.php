@@ -9,11 +9,13 @@ use MomoKit\Core\Contracts\Driver;
 use MomoKit\Core\DTO\CollectRequest;
 use MomoKit\Core\DTO\Payment;
 use MomoKit\Core\MobileMoneyManager;
+use MomoKit\Core\Testing\MobileMoneyFake;
 
 /**
  * @method static MobileMoneyManager register(Driver $driver)
  * @method static Driver driver(?string $name = null)
  * @method static Payment collect(CollectRequest $request, ?string $driver = null)
+ * @method static MobileMoneyFake fake(string ...$drivers)
  *
  * @see MobileMoneyManager
  */

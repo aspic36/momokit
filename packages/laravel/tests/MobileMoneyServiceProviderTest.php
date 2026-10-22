@@ -90,4 +90,26 @@ final class MobileMoneyServiceProviderTest extends OrchestraTestCase
 
         MobileMoney::driver('fedapay');
     }
+
+    public function test_the_facade_fake_intercepts_collects(): void
+    {
+        $fake = MobileMoney::fake('fedapay');
+
+        $payment = MobileMoney::collect(
+            CollectRequest::make(5000, 'XOF', '+22997000001'),
+            driver: 'fedapay',
+        );
+
+        $this->assertSame(PaymentStatus::Pending, $payment->status);
+        $this->assertStringStartsWith('fedapay_fake_', $payment->id);
+
+        $fake->assertCollected(static fn (CollectRequest $request): bool => $request->amount === 5000);
+
+        $fake->succeed($payment->id);
+
+        $this->assertSame(
+            PaymentStatus::Succeeded,
+            MobileMoney::driver('fedapay')->status($payment->id)->status,
+        );
+    }
 }

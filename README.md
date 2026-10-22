@@ -4,7 +4,7 @@
 
 FedaPay, KkiaPay, PayDunya, CinetPay : chaque agrégateur a sa propre API, ses webhooks, ses codes d'erreur. MomoKit les rend interchangeables. Vous écrivez votre code de paiement une seule fois ; changer de fournisseur, c'est changer une ligne de configuration.
 
-> **État : pré-version 0.1 — en développement.** Drivers `mock` et `fedapay` (collecte, statut, webhooks signés) + bridge Laravel. L'installation Packagist arrive avec la v0.1.
+> **État : pré-version 0.1 — en développement.** Drivers `mock` et `fedapay` (collecte, statut, webhooks signés), bridge Laravel, fake de test (`MobileMoney::fake()`) et commande `mobile-money:simulate`. L'installation Packagist arrive avec la v0.1.
 
 ## Pourquoi
 
@@ -105,11 +105,48 @@ public function __invoke(Request $request, string $driver)
 
 La signature est vérifiée (HMAC SHA-256, tolérance de 5 minutes contre le rejeu) et l'événement est normalisé : votre code ne dépend pas du format de FedaPay.
 
+## Tester sans réseau : `MobileMoney::fake()`
+
+`MobileMoney::fake()` remplace tous les drivers par un simulateur en mémoire : collectes et vérifications de statut sont enregistrées, aucun appel réseau. Les paiements restent `pending` jusqu'à ce que le test décide de leur sort.
+
+```php
+use MomoKit\Core\DTO\CollectRequest;
+use MomoKit\Core\Enums\PaymentStatus;
+use MomoKit\Laravel\Facades\MobileMoney;
+
+public function test_checkout(): void
+{
+    $fake = MobileMoney::fake('fedapay');
+
+    $payment = MobileMoney::collect(
+        CollectRequest::make(5000, 'XOF', '+22997000001'),
+        driver: 'fedapay',
+    );
+
+    $fake->assertCollected(fn (CollectRequest $request) => $request->amount === 5000);
+
+    $fake->succeed($payment->id);
+
+    $this->assertSame(
+        PaymentStatus::Succeeded,
+        MobileMoney::driver('fedapay')->status($payment->id)->status,
+    );
+}
+```
+
+Assertions disponibles : `assertCollected()`, `assertCollectedTimes()`, `assertNothingCollected()`, `assertStatusChecked()`. Contrôle du statut : `succeed()`, `fail()`, `cancel()` ou `markAs()`.
+
+Simulateur en ligne de commande (démo, formation, test manuel) :
+
+```bash
+php artisan mobile-money:simulate fedapay --amount=5000 --status=succeeded
+```
+
 ## Structure du dépôt
 
 ```
 packages/core     SDK PHP pur (aucune dépendance framework)
-packages/laravel  Bridge Laravel (façade, config, événements)
+packages/laravel  Bridge Laravel (façade, config, commande, fake)
 sandbox           Sandbox public gratuit (à venir — phase 3)
 docs              Documentation FR/EN
 ```
@@ -118,7 +155,7 @@ docs              Documentation FR/EN
 
 1. `core` + driver `mock` + tests — **fait**
 2. Driver FedaPay + webhooks signés — **fait** (à valider contre la vraie API sandbox)
-3. `MobileMoney::fake()` + commande `mobile-money:simulate`
+3. `MobileMoney::fake()` + commande `mobile-money:simulate` — **fait**
 4. v0.1 sur Packagist + sandbox public en ligne
 5. KkiaPay, PayDunya, CinetPay
 

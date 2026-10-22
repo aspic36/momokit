@@ -13,6 +13,7 @@ use MomoKit\Core\Drivers\FedaPay\FedaPayConfig;
 use MomoKit\Core\Drivers\FedaPay\FedaPayDriver;
 use MomoKit\Core\Drivers\Mock\MockDriver;
 use MomoKit\Core\MobileMoneyManager;
+use MomoKit\Laravel\Console\SimulateCommand;
 
 class MobileMoneyServiceProvider extends ServiceProvider
 {
@@ -75,6 +76,10 @@ class MobileMoneyServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if ($this->app->runningInConsole()) {
+            $this->commands([
+                SimulateCommand::class,
+            ]);
+
             $this->publishes([
                 __DIR__.'/../config/mobile-money.php' => config_path('mobile-money.php'),
             ], 'mobile-money-config');
