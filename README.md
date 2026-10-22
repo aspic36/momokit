@@ -4,7 +4,7 @@
 
 FedaPay, KkiaPay, PayDunya, CinetPay : chaque agrégateur a sa propre API, ses webhooks, ses codes d'erreur. MomoKit les rend interchangeables. Vous écrivez votre code de paiement une seule fois ; changer de fournisseur, c'est changer une ligne de configuration.
 
-> **État : pré-version 0.1 — en développement.** Drivers `mock` et `fedapay` (collecte, statut, webhooks signés), bridge Laravel, fake de test (`MobileMoney::fake()`) et commande `mobile-money:simulate`. L'installation Packagist arrive avec la v0.1.
+> **État : v0.1.0, prête à publier.** Drivers `mock` et `fedapay` (collecte, statut, webhooks signés), bridge Laravel, fake de test (`MobileMoney::fake()`), commande `mobile-money:simulate` et sandbox local. Les paquets sont prêts sur les dépôts de split ; la soumission Packagist attend la création du compte. Le sandbox est prêt pour Render (`render.yaml`).
 
 ## Pourquoi
 
@@ -142,6 +142,18 @@ Simulateur en ligne de commande (démo, formation, test manuel) :
 php artisan mobile-money:simulate fedapay --amount=5000 --status=succeeded
 ```
 
+## Sandbox public
+
+`sandbox/` contient une API mobile money simulée (clés sandbox, paiements, page de paiement, webhooks signés) pour tester un parcours complet sans compte :
+
+```bash
+cd sandbox
+composer install
+php -S 127.0.0.1:8080 -t public public/index.php
+```
+
+Ouvrir http://127.0.0.1:8080 : la page affiche une clé et des exemples `curl`. Déploiement prêt pour Render (`render.yaml`, Docker). Référence API : [docs/sandbox.md](docs/sandbox.md).
+
 ## Structure du dépôt
 
 ```
@@ -156,7 +168,7 @@ docs              Documentation FR/EN
 1. `core` + driver `mock` + tests — **fait**
 2. Driver FedaPay + webhooks signés — **fait** (à valider contre la vraie API sandbox)
 3. `MobileMoney::fake()` + commande `mobile-money:simulate` — **fait**
-4. v0.1 sur Packagist + sandbox public en ligne — **en cours**
+4. v0.1 sur Packagist + sandbox en ligne — **en attente** (compte Packagist à créer, déploiement Render)
 5. KkiaPay, PayDunya, CinetPay
 
 ## Licence
